@@ -11,5 +11,10 @@ config_version=5
 [application]
 
 config/name="godot cpp template"
-config/features=PackedStringArray("4.1", "Forward Plus")
+run/main_scene="uid://bin7ek1x5ec5w"
+config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
+
+[audio]
+
+driver/enable_input=true
