@@ -8,6 +8,7 @@
 #include "summator.h"
 #include "amplitude.h"
 #include "bandpass.h"
+#include "my_amp.hpp"
 
 using namespace godot;
 
@@ -18,7 +19,10 @@ void initialize_gdextension_types(ModuleInitializationLevel p_level)
 	}
 	GDREGISTER_CLASS(Summator);
 	GDREGISTER_CLASS(Amplitude);
-	GDREGISTER_CLASS(Bandpass);
+	GDREGISTER_CLASS(Bandpassta);
+	GDREGISTER_CLASS(BandpassInstance);
+	GDREGISTER_CLASS(MyAmpInstance);
+	GDREGISTER_CLASS(MyAmp);
 }
 
 void uninitialize_gdextension_types(ModuleInitializationLevel p_level) {

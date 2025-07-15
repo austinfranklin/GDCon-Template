@@ -1,8 +1,8 @@
 [gd_resource type="AudioBusLayout" load_steps=2 format=3 uid="uid://hyetdc1s3ndd"]
 
-[sub_resource type="Bandpass" id="Bandpass_j3pel"]
-resource_name = "Bandpass"
+[sub_resource type="MyAmp" id="MyAmp_j3pel"]
+resource_name = "MyAmp"
 
 [resource]
-bus/0/effect/0/effect = SubResource("Bandpass_j3pel")
-bus/0/effect/0/enabled = false
+bus/0/effect/0/effect = SubResource("MyAmp_j3pel")
+bus/0/effect/0/enabled = true

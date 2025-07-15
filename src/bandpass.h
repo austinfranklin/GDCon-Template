@@ -1,41 +1,60 @@
 #pragma once
 
-#include <godot_cpp/classes/object.hpp>
+#include <godot_cpp/classes/audio_effect.hpp>
+#include <godot_cpp/classes/audio_effect_instance.hpp>
 
 namespace godot {
 
-class Bandpass : public Object {
-    GDCLASS(Bandpass, Object);
+class Bandpassta;
+
+class BandpassInstance : public AudioEffectInstance {
+    GDCLASS(BandpassInstance, AudioEffectInstance);
 
 private:
+    friend class Bandpassta;
+
     // Filter coefficients
     float b0, b1, b2, a1, a2;
 
-    // State variables (filter delay history)
-    float x1, x2; // previous inputs
-    float y1, y2; // previous outputs
+    // Delay buffers for 2 channels, initialized to zero in constructor
+    float x1[2]{}, x2[2]{}, y1[2]{}, y2[2]{};
 
-    // Parameters
     float sample_rate;
-    float center_freq;
-    float q_factor;
 
-    float last_amplitude = 0.0f;
+    Ref<Bandpassta> base;
 
-    void calculate_coefficients();
+    void calculate_coefficients(float freq, float q);
+
+public:
+    BandpassInstance();  // Constructor initializes delay buffers and sample rate
+
+    static void _bind_methods();
+
+    virtual void process(const AudioFrame *p_src_frames, AudioFrame *p_dst_frames, int p_frame_count);
+};
+
+class Bandpassta : public AudioEffect {
+    GDCLASS(Bandpassta, AudioEffect);
+
+    friend class BandpassInstance;
+
+private:
+    float center_freq = 440.0f;
+    float q_factor = 10.0f;
 
 protected:
     static void _bind_methods();
 
 public:
-    Bandpass();
+    Bandpassta();
 
-    // Parameters
-    void set_params(float p_center_freq, float p_q_factor, float p_sample_rate);
-    float get_amplitude() const;
+    Ref<AudioEffectInstance> instantiate();
 
-    // Audio processing
-    PackedFloat32Array process(const PackedFloat32Array &input);
+    void set_center_freq(float freq);
+    float get_center_freq() const;
+
+    void set_q_factor(float q);
+    float get_q_factor() const;
 };
 
 }
