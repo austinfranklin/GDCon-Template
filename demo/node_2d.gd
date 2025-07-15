@@ -6,3 +6,6 @@ func _ready() -> void:
 	#summ.add(10)
 	#summ.add(5)
 	#print(summ.get_total())
+
+func _process(delta):
+	pass

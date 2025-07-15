@@ -1,4 +1,5 @@
-#pragma once
+#ifndef BANDPASS_H
+#define BANDPASS_H
 
 #include <godot_cpp/classes/audio_effect.hpp>
 #include <godot_cpp/classes/audio_effect_instance.hpp>
@@ -8,53 +9,49 @@ namespace godot {
 class Bandpassta;
 
 class BandpassInstance : public AudioEffectInstance {
-    GDCLASS(BandpassInstance, AudioEffectInstance);
+	GDCLASS(BandpassInstance, AudioEffectInstance);
+	friend class Bandpassta;
 
-private:
-    friend class Bandpassta;
+	Ref<Bandpassta> base;
 
-    // Filter coefficients
-    float b0, b1, b2, a1, a2;
+	float center_freq;
+	float q_factor;
 
-    // Delay buffers for 2 channels, initialized to zero in constructor
-    float x1[2]{}, x2[2]{}, y1[2]{}, y2[2]{};
+	float b0, b1, b2, a1, a2;
+	float x1[2], x2[2], y1[2], y2[2];
 
-    float sample_rate;
+protected:
+	static void _bind_methods();
 
-    Ref<Bandpassta> base;
-
-    void calculate_coefficients(float freq, float q);
+	void calculate_coefficients(float sample_rate);
 
 public:
-    BandpassInstance();  // Constructor initializes delay buffers and sample rate
-
-    static void _bind_methods();
-
-    virtual void process(const AudioFrame *p_src_frames, AudioFrame *p_dst_frames, int p_frame_count);
+	void _process(const void *p_src_buffer, AudioFrame *p_dst_buffer, int32_t p_frame_count) override;
 };
 
 class Bandpassta : public AudioEffect {
-    GDCLASS(Bandpassta, AudioEffect);
+	GDCLASS(Bandpassta, AudioEffect);
+	friend class BandpassInstance;
 
-    friend class BandpassInstance;
-
-private:
-    float center_freq = 440.0f;
-    float q_factor = 10.0f;
+	float center_freq;
+	float q_factor;
 
 protected:
-    static void _bind_methods();
+	static void _bind_methods();
 
 public:
-    Bandpassta();
+	Ref<AudioEffectInstance> _instantiate() override;
 
-    Ref<AudioEffectInstance> instantiate();
+	void set_center_freq(float freq);
+	float get_center_freq() const;
 
-    void set_center_freq(float freq);
-    float get_center_freq() const;
+	void set_q_factor(float q);
+	float get_q_factor() const;
 
-    void set_q_factor(float q);
-    float get_q_factor() const;
+	Bandpassta();
+	~Bandpassta();
 };
 
 }
+
+#endif
