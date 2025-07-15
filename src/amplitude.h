@@ -14,7 +14,7 @@ protected:
     static void _bind_methods();
 
 public:
-    void process(const PackedVector2Array &audio);
+    void process(const PackedFloat32Array &audio);
     float get_amplitude() const;
 };
 
